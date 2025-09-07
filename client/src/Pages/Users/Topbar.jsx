@@ -8,6 +8,7 @@ import { FiFilter } from "react-icons/fi";
 import CreateUser from "./CreateEmployee";
 import Filter from "./Filter";
 import { searchUserReducer } from "../../redux/reducer/user";
+import CreateClient from "./CreateClient";
 
 const Topbar = ({ view, setView, setIsFiltered, isFiltered }) => {
 
@@ -103,14 +104,12 @@ const Topbar = ({ view, setView, setIsFiltered, isFiltered }) => {
             </div>
           </div>
         )}
-
         {showClientTopBar && showCreatePageTopBar && (
           <div className="flex items-center gap-2">
             <div className="bg-[#ebf2f5] hover:bg-[#dfe6e8] p-1 pl-2 pr-2 rounded-md w-auto">
               <FormControl>
                 <Input
                   name="search"
-                  fullWidth="true"
                   placeholder="Search Clients"
                   startAdornment={
                     <InputAdornment position="start">
@@ -120,10 +119,19 @@ const Topbar = ({ view, setView, setIsFiltered, isFiltered }) => {
                 />
               </FormControl>
             </div>
+
+            <Tooltip title="Add New Client" placement="top" arrow>
+              <div onClick={handleCreateopen("body")}>
+                <button className="bg-primary-red hover:bg-red-400 transition-all text-white w-[44px] h-[44px] flex justify-center items-center rounded-full shadow-xl">
+                  <Add />
+                </button>
+              </div>
+            </Tooltip>
           </div>
         )}
       </div>
-      <CreateUser open={open} scroll={scroll} setOpen={setOpen} />
+      {showEmployeeTopBar && <CreateUser open={open} scroll={scroll} setOpen={setOpen} />}
+      {showClientTopBar && <CreateClient open={open} scroll={scroll} setOpen={setOpen} />}
       <Filter open={openFilters} setOpen={setOpenFilters} setIsFiltered={setIsFiltered} />
     </div>
   );

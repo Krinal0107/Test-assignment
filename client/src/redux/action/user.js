@@ -146,19 +146,21 @@ export const getUser = (userId) => async (dispatch) => {
         dispatch(error(err.message))
     }
 }
-export const createClient = (clientData) => async (dispatch) => {
+// ADD this thunk (ensure you have start, end, error, createClientReducer, api, and toast imported like other actions)
+export const createClient = (clientData, setOpen) => async (dispatch) => {
     try {
-        dispatch(start())
-        const { data } = await api.createClient(clientData)
-        dispatch(createClientReducer(data.result))
-        navigate('/clients')
-        dispatch(end())
+        dispatch(start());
+        const { data } = await api.createClient(clientData);
+        dispatch(createClientReducer(data.result));
+        dispatch(end());
+        typeof setOpen === "function" && setOpen(false);
+        toast.success("Client created successfully");
     } catch (err) {
-        const message = err?.response?.data?.message || err?.message || "Something went wrong"
-        toast.error(message)
-        dispatch(error(err.message))
+        const message = err?.response?.data?.message || err?.message || "Something went wrong";
+        toast.error(message);
+        dispatch(error(message));
     }
-}
+};
 export const createEmployee = (employeeData, setOpen) => async (dispatch) => {
     try {
         dispatch(start())
