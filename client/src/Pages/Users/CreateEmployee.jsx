@@ -38,26 +38,41 @@ const CreateUser = ({ open, setOpen, scroll }) => {
 
   //////////////////////////////////////// STATES /////////////////////////////////////
   const [employeeData, setEmployeeData] = useState(initialEmployeeState);
+  const [employeeErrors, setEmployeeErrors] = useState({});
 
   //////////////////////////////////////// USE EFFECTS /////////////////////////////////////
 
   //////////////////////////////////////// FUNCTIONS /////////////////////////////////////
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { firstName, lastName, username, password, phone, email } = employeeData
-    if (!firstName || !lastName || !username || !password || !phone  )
-      return alert("Make sure to provide all the fields")
+    const { firstName, lastName, username, password, phone } = employeeData;
+
+    const errs = {};
+    if (!firstName?.trim()) errs.firstName = "First name is required";
+    if (!lastName?.trim()) errs.lastName = "Last name is required";
+    if (!username?.trim()) errs.username = "Username is required";
+    if (!password?.trim()) errs.password = "Password is required";
+    if (!phone?.trim()) errs.phone = "Phone is required";
+
+    setEmployeeErrors(errs);
+    if (Object.keys(errs).length) return;
+
     dispatch(createEmployee(employeeData, setOpen));
-    setEmployeeData(initialEmployeeState)
+    setEmployeeData(initialEmployeeState);
+    setEmployeeErrors({});
   };
 
   const handleChange = (field, value) => {
-    setEmployeeData((prevFilters) => ({ ...prevFilters, [field]: value, }));
+    setEmployeeData((prev) => ({ ...prev, [field]: value }));
+    if (employeeErrors[field]) {
+      setEmployeeErrors((prev) => ({ ...prev, [field]: "" }));
+    }
   };
 
   const handleClose = () => {
     setOpen(false);
-    setEmployeeData(initialEmployeeState)
+    setEmployeeData(initialEmployeeState);
+    setEmployeeErrors({});
   };
 
   return (
@@ -93,6 +108,8 @@ const CreateUser = ({ open, setOpen, scroll }) => {
                     fullWidth
                     value={employeeData.firstName}
                     onChange={(e) => handleChange('firstName', e.target.value)}
+                    error={!!employeeErrors.firstName}
+                    helperText={employeeErrors.firstName}
                   />
                 </td>
               </tr>
@@ -104,6 +121,8 @@ const CreateUser = ({ open, setOpen, scroll }) => {
                     fullWidth
                     value={employeeData.lastName}
                     onChange={(e) => handleChange('lastName', e.target.value)}
+                    error={!!employeeErrors.lastName}
+                    helperText={employeeErrors.lastName}
                   />
                 </td>
               </tr>
@@ -115,6 +134,8 @@ const CreateUser = ({ open, setOpen, scroll }) => {
                     fullWidth
                     value={employeeData.username}
                     onChange={(e) => handleChange('username', e.target.value)}
+                    error={!!employeeErrors.username}
+                    helperText={employeeErrors.username}
                   />
                 </td>
               </tr>
@@ -139,6 +160,8 @@ const CreateUser = ({ open, setOpen, scroll }) => {
                     onChange={(e) => handleChange("password", e.target.value)}
                     size="small"
                     fullWidth
+                    error={!!employeeErrors.password}
+                    helperText={employeeErrors.password}
                   />
                 </td>
               </tr>
@@ -151,6 +174,8 @@ const CreateUser = ({ open, setOpen, scroll }) => {
                     value={employeeData.phone}
                     onChange={(e) => handleChange("phone", e.target.value)}
                     fullWidth
+                    error={!!employeeErrors.phone}
+                    helperText={employeeErrors.phone}
                   />
                 </td>
               </tr>
